@@ -6,135 +6,174 @@
 //
 
 import SwiftUI
-/*struct Empty{
-    var col:Int
-    var btn:some View{
-        Button(action: {
-            
-        }, label: {
-            Image("empty")
-                .resizable()
-                .frame(width: 30, height: 30)
-        })
-    }
-}*/
-var board=Array(repeating: [0,0,0,0,0,0,0], count: 6)
-let empty:some View=Image("empty")
-    .resizable()
-    .frame(width: 45, height:45)
-let yellow:some View=Image("yellow")
-    .resizable()
-    .frame(width: 45, height:45)
-let red:some View=Image("red")
-    .resizable()
-    .frame(width: 45, height: 45)
-let win:some View=Image("win")
-    .resizable()
-    .frame(width: 45, height: 45)
-var e_btn:some View=Button(action: {
-    
-}, label: {
-    empty
-})
-var y_btn:some View=Button(action: {
-    
-}, label: {
-    yellow
-})
-var r_btn:some View=Button(action: {
-    
-}, label: {
-    red
-})
-var w_btn:some View=Button(action: {
-    
-}, label: {
-    win
-})
-
-var arr2=Array(repeating:0,count:6)
-var arr3=Array(repeating:0,count:6)
-var arr4=Array(repeating:0,count:6)
-var arr5=Array(repeating:0,count:6)
-var arr6=Array(repeating:0,count:6)
-var arr7=Array(repeating:0,count:6)
-/*func modify(i:Int){
-    if(i==1){
-        for  j in(0..<6){
-            if arr1[j]==0{
-                arr1[j]=1;
-                return
-            }
-        }
-    }
-}*/
 struct ContentView: View {
-    @State private var arr1=Array(repeating:0,count:6)
-    var body: some View {
-        /*VStack(spacing:0){
-            ForEach (0..<6){ i in
-                HStack(spacing:0){
-                    ForEach  (0..<7){ j in
-                        //var blk=block(x:i,y:j)
-                        if board[i][j]==0{
-                            e_btn
-                        }
-                        else if board[i][j]==1{
-                            y_btn
-                        }
-                        else if board[i][j]==2{
-                            r_btn
-                        }
-                        else {
-                            w_btn
+    @State private var board=Array(repeating: [0,0,0,0,0,0,0], count: 6)
+    @State private var count=0
+    @State private var lock=0
+    @State private var y_remain:Int=21
+    @State private var r_remain:Int=21
+    @State private var reset=0
+func ifwin()->Int{
+        var color:Int=count%2+1
+        for i in (0..<6){
+            for j in(0..<7){
+                var c:Int=1
+                if(i+3<6){//下
+                    for x in(0..<4){
+                        if(board[i+x][j] != color){
+                            c=0
                         }
                     }
+                    if(c==1){
+                        for x in(0..<4){
+                            board[i+x][j]=666
+                        }
+                        return 1
+                    }
+                    c=1
+                }
+                if(j+3<7){//右
+                    for x in(0..<4){
+                        if(board[i][j+x] != color){
+                            c=0
+                        }
+                    }
+                    if(c==1){
+                        for x in(0..<4){
+                            board[i][j+x]=666
+                        }
+                        return 1
+                    }
+                    c=1
+                }
+                if(i+3<6 && j+3<7){//右下
+                    for x in(0..<4){
+                        if(board[i+x][j+x] != color){
+                            c=0
+                        }
+                    }
+                    if(c==1){
+                        for x in(0..<4){
+                            board[i+x][j+x]=666
+                        }
+                        return 1
+                    }
+                    c=1
+                }
+                if(i-3 > -1 && j+3<6){//右上
+                    for x in(0..<4){
+                        if(board[i-x][j+x] != color){
+                            c=0
+                        }
+                    }
+                    if(c==1){
+                        for x in(0..<4){
+                            board[i-x][j+x]=666
+                        }
+                        return 1
+                    }
+                    c=1
                 }
             }
-        }*/
-        
-        HStack(spacing:0){
-            
-            Button(action: {
-                for  j in(0..<6){
-                    if arr1[5-j]==0{
-                        arr1[5-j]=1;
-                        break;
-                    }
-                }
-                
-            }, label: {
-                VStack(spacing:0){
-                    ForEach(0..<6){ i in
-                        switch arr1[i]{
-                        case 0:
-                            empty
-                        case 1:
-                            yellow
-                        case 2:
-                            red
-                        case 3:
-                            win
-                        default:
-                            empty
-                        }
-                        /*if arr1[i]==0{
-                            empty
-                        }
-                        else if arr1[i]==1{
-                            yellow
-                        }
-                        else if arr1[i]==2{
-                            red
-                        }
-                        else {
-                            win
-                        }*/
-                    }
-                }
-            })
-            
         }
+        return 0
+    }
+    
+    var body: some View {
+          if reset==0{
+                  VStack{
+                      HStack{
+                          HStack{
+                              Image("yellow")
+                              .resizable()
+                              .frame(width: 80, height:80)
+                              Text("\(y_remain)")
+                                        .font(.largeTitle)
+                          }
+                          HStack{
+                              Image("red")
+                              .resizable()
+                              .frame(width: 80, height:80)
+                              Text("\(r_remain)")
+                                        .font(.largeTitle)
+                          }
+                      }
+                      VStack(spacing:0){
+                             ForEach (0..<6){ i in
+                                    HStack(spacing:0){
+                                        ForEach  (0..<7){ j in
+                                            if board[i][j]==0{
+                                                Image("empty")
+                                                    .resizable()
+                                                    .frame(width: 45, height:45)
+                                                    .onTapGesture {
+                                                        if lock==0{//不能同時放兩個
+                                                            board[i][j]=count%2+1
+                                                            var current=i
+                                                            var destroy=0
+                                                            lock=1
+                                                            Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { timer in
+                                                                if destroy == 1 {
+                                                                    timer.invalidate()
+                                                                }
+                                                                else if current+1<6 && board[current+1][j]==0{
+                                                                    var tmp=board[current][j]
+                                                                    board[current][j]=board[current+1][j]
+                                                                    board[current+1][j]=tmp
+                                                                    current=current+1
+                                                                }
+                                                                else{
+                                                                    var tmp:Int=ifwin()
+                                                                    destroy=1
+                                                                      if count%2==1{
+                                                                          r_remain = r_remain-1
+                                                                      }
+                                                                      else{
+                                                                          y_remain = y_remain-1
+                                                                      }
+                                                                      if r_remain == 0{//game end
+                                                                               reset=1
+                                                                      }
+                                                                    else if tmp==0{
+                                                                         lock=0
+                                                                    }
+                                                                    count=count+1
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                        
+                                            }
+                                            else if board[i][j]==1{
+                                                Image("yellow")
+                                                    .resizable()
+                                                    .frame(width: 45, height:45)
+                                            }
+                                            else if board[i][j]==2{
+                                                Image("red")
+                                                    .resizable()
+                                                    .frame(width: 45, height:45)
+                                            }
+                                            else {
+                                                Image("win")
+                                                    .resizable()
+                                                    .frame(width: 45, height:45)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+              }
+          else{
+                    reset=1
+                    for i in(0..<6){
+                              for j in (0..<7){
+                                        board[i][j]=0
+                              }
+                    }
+                    
+          }
     }
 }
 
