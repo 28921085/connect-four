@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4393BBFC27E5CC0A002FF9F8 /* bgm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4393BBFB27E5CC0A002FF9F8 /* bgm.mp3 */; };
+		4393BBFF27E5CD80002FF9F8 /* click.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4393BBFE27E5CD80002FF9F8 /* click.mp3 */; };
 		43DB34B627DDBE0000754C57 /* connect_fourApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DB34B527DDBE0000754C57 /* connect_fourApp.swift */; };
 		43DB34B827DDBE0000754C57 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DB34B727DDBE0000754C57 /* ContentView.swift */; };
 		43DB34BA27DDBE0A00754C57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43DB34B927DDBE0A00754C57 /* Assets.xcassets */; };
@@ -14,6 +16,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4393BBFB27E5CC0A002FF9F8 /* bgm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bgm.mp3; sourceTree = "<group>"; };
+		4393BBFE27E5CD80002FF9F8 /* click.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = click.mp3; sourceTree = "<group>"; };
 		43DB34B227DDBE0000754C57 /* connect four.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "connect four.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		43DB34B527DDBE0000754C57 /* connect_fourApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = connect_fourApp.swift; sourceTree = "<group>"; };
 		43DB34B727DDBE0000754C57 /* ContentView.swift */ = {isa = PBXFileReference; indentWidth = 10; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; tabWidth = 10; };
@@ -53,7 +57,9 @@
 			isa = PBXGroup;
 			children = (
 				43DB34B527DDBE0000754C57 /* connect_fourApp.swift */,
+				4393BBFB27E5CC0A002FF9F8 /* bgm.mp3 */,
 				43DB34B727DDBE0000754C57 /* ContentView.swift */,
+				4393BBFE27E5CD80002FF9F8 /* click.mp3 */,
 				43DB34B927DDBE0A00754C57 /* Assets.xcassets */,
 				43DB34BE27DDBE0A00754C57 /* Info.plist */,
 				43DB34BB27DDBE0A00754C57 /* Preview Content */,
@@ -126,6 +132,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4393BBFC27E5CC0A002FF9F8 /* bgm.mp3 in Resources */,
+				4393BBFF27E5CD80002FF9F8 /* click.mp3 in Resources */,
 				43DB34BD27DDBE0A00754C57 /* Preview Assets.xcassets in Resources */,
 				43DB34BA27DDBE0A00754C57 /* Assets.xcassets in Resources */,
 			);

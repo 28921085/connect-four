@@ -1,11 +1,5 @@
-//
-//  ContentView.swift
-//  connect four
-//
-//  Created by User14 on 2022/3/13.
-//
-
 import SwiftUI
+import AVFoundation
 struct ContentView: View {
     @State private var board=Array(repeating: [0,0,0,0,0,0,0], count: 6)
     @State private var count=0
@@ -21,6 +15,13 @@ struct ContentView: View {
 @State private var time_start:Int=1
 @State private var time_reset:Int=0
 @State private var game_time:Timer?
+@State private var filename1:[String]=["yellow","pac man","coin"]
+@State private var filename2:[String]=["red","bowling"]
+@State private var index1:Int=0
+@State private var index2:Int=0
+@State private var now:String="Player 1"
+let player = AVPlayer()
+let player2 = AVPlayer()
 func ifwin()->Int{
           var color:Int=count%2+1
           for i in (0..<6){
@@ -104,12 +105,20 @@ func ifwin()->Int{
     var body: some View {
 VStack(spacing:5){
           HStack{
+                    Text(now+" turn")
                     Text("⏰")
                     Text("\(String(format: "%.1f", time))")
+                              
           }
           HStack{
                     VStack{
                               Text("Player 1")
+                                        .onAppear{
+                                        let fileUrl = Bundle.main.url(forResource: "bgm", withExtension: "mp3")!
+                                                        let playerItem = AVPlayerItem(url: fileUrl)
+                                                        self.player.replaceCurrentItem(with: playerItem)
+                                                        self.player.play()
+                              }
                               Text("\(y_pt)").font(.system(size:50))
                               
                     }
@@ -131,19 +140,24 @@ VStack(spacing:5){
                               Text("\(r_pt)").font(.system(size:50))
                     }
           }
-          
   HStack{
       HStack{
-          Image("yellow")
+          Image(filename1[index1])
           .resizable()
           .frame(width: 50, height:50)
+          .onTapGesture{
+                    index1=(index1+1)%3
+          }
           Text("\(y_remain)")
                     .font(.largeTitle).foregroundColor(Color.yellow)
       }
       HStack{
-          Image("red")
+          Image(filename2[index2])
           .resizable()
           .frame(width: 50, height:50)
+          .onTapGesture{
+                    index2=(index2+1)%2
+          }
           Text("\(r_remain)")
                     .font(.largeTitle).foregroundColor(Color.red)
       }
@@ -172,6 +186,10 @@ VStack(spacing:5){
                                                                       }
                                                             }
                                                   }
+                                                  let fileUrl2 = Bundle.main.url(forResource: "click", withExtension: "mp3")!
+                                                                  let playerItem2 = AVPlayerItem(url: fileUrl2)
+                                                                  self.player2.replaceCurrentItem(with: playerItem2)
+                                                  self.player2.play()
                                                   var current=i
                                                   var destroy=0
                                                   lock=1
@@ -194,7 +212,7 @@ VStack(spacing:5){
                                                             else{
                                                                 y_remain = y_remain-1
                                                             }
-                                                            if r_remain == 0{//game end
+                                                            if r_remain == 0 && tmp != 1{//game end
                                                                     log="TIE"
                                                                       game_end=1
                                                                       lock=0
@@ -216,69 +234,70 @@ VStack(spacing:5){
                                                             lock=0
                                                           }
                                                           count=count+1
+                                                            
+                                                            if p2=="BOT" && game_end==0 {//電腦打牌
+                                                                      
+                                                                      var rd=Int.random(in:0..<6)
+                                                                      while board[0][rd] != 0{
+                                                                                rd=Int.random(in:0..<6)
+                                                                      }
+                                                                      board[0][rd]=count%2+1
+                                                                      var stop=0
+                                                                      var curr=0
+                                                                      lock=1
+                                                                      Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false){ timerr in
+                                                                                Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { ttimer in
+                                                                                    if stop == 1 {
+                                                                                        ttimer.invalidate()
+                                                                                    }
+                                                                                    else if curr+1<6 && board[curr+1][rd]==0{
+                                                                                        var tmp=board[curr][rd]
+                                                                                        board[curr][rd]=board[curr+1][rd]
+                                                                                        board[curr+1][rd]=tmp
+                                                                                        curr=curr+1
+                                                                                    }
+                                                                                    else{
+                                                                                        var tmp:Int=ifwin()
+                                                                                        stop=1
+                                                                                          r_remain = r_remain-1
+                                                                                          if r_remain == 0 && tmp != 1{//game end
+                                                                                                  log="TIE"
+                                                                                                    game_end=1
+                                                                                                    lock=0
+                                                                                          }
+                                                                                        else if tmp==0{
+                                                                                             lock=0
+                                                                                        }
+                                                                                        else{
+                                                                                                    log=p2+" win"
+                                                                                                    r_pt+=1
+                                                                                                    game_end=1
+                                                                                                    lock=0
+                                                                                        }
+                                                                                        count=count+1
+                                                                                    }
+                                                                                }
+                                                                      }
+                                                                      now="Player 1"
+                                                            }
                                                       }
                                                   }
-                                                  if p2=="BOT"{//電腦打牌
-                                                            board[i][j]=count%2+1
-                                                            var stop=0
-                                                            var curr=0
-                                                            Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false){ timer in
-                                                                      /*Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { ttimer in
-                                                                          if destroy == 1 {
-                                                                              ttimer.invalidate()
-                                                                          }
-                                                                          else if curr+1<6 && board[current+1][j]==0{
-                                                                              var tmp=board[current][j]
-                                                                              board[curr][j]=board[curr+1][j]
-                                                                              board[curr+1][j]=tmp
-                                                                              curr=curr+1
-                                                                          }
-                                                                          else{
-                                                                              var tmp:Int=ifwin()
-                                                                              stop=1
-                                                                                if count%2==1{
-                                                                                    r_remain = r_remain-1
-                                                                                }
-                                                                                else{
-                                                                                    y_remain = y_remain-1
-                                                                                }
-                                                                                if r_remain == 0{//game end
-                                                                                        log="TIE"
-                                                                                          game_end=1
-                                                                                          lock=0
-                                                                                }
-                                                                              else if tmp==0{
-                                                                                   lock=0
-                                                                              }
-                                                                              else{
-                                                                                if(count%2==1){
-                                                                                          log=p2+" win"
-                                                                                          r_pt+=1
-                                                                                          game_end=1
-                                                                                }
-                                                                                else{
-                                                                                          log="Player 1 win"
-                                                                                          y_pt+=1
-                                                                                          game_end=1
-                                                                                }
-                                                                                lock=0
-                                                                              }
-                                                                              count=count+1
-                                                                          }
-                                                                      }*/
-                                                            }
-                                                            count=count+1
+                                                  if count%2 == 1{
+                                                            now="Player 1"
+                                                  }
+                                                  else{
+                                                            now=p2
                                                   }
                                               }
                                           }
                                   }
                                   else if board[i][j]==1{
-                                      Image("yellow")
+                                      Image(filename1[index1])
                                           .resizable()
                                           .frame(width: 45, height:45)
                                   }
                                   else if board[i][j]==2{
-                                      Image("red")
+                                      Image(filename2[index2])
                                           .resizable()
                                           .frame(width: 45, height:45)
                                   }
@@ -301,9 +320,7 @@ VStack(spacing:5){
                                         Text("Reset").font(.largeTitle)
                               }
                     }
-                    
           }
-          
     }
 }
 struct ContentView_Previews: PreviewProvider {
